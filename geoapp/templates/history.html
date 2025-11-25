@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Search History</title>
+</head>
+<body>
+    <h1>Search History</h1>
+
+    {% if error_message %}
+        <p style="color:red;">{{ error_message }}</p>
+    {% endif %}
+
+    {% if history_records %}
+        {% for record in history_records %}
+            <div style="border:1px solid #ccc; margin-bottom:15px; padding:10px;">
+                <p><strong>Continent:</strong> {{ record.continent }}</p>
+                <p><strong>Date (UTC):</strong> {{ record.created_at }}</p>
+
+                <table border="1" cellpadding="5">
+                    <thead>
+                        <tr>
+                            <th>Country</th>
+                            <th>Capital</th>
+                            <th>Temperature (°C)</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in record.results %}
+                            <tr>
+                                <td>{{ item.country }}</td>
+                                <td>{{ item.capital }}</td>
+                                <td>
+                                    {% if item.temperature is not None %}
+                                        {{ item.temperature }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                                <td>{{ item.description|default:"-" }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No history records found.</p>
+    {% endif %}
+
+    <p><a href="{% url 'home' %}">Back to search</a></p>
+</body>
+</html>

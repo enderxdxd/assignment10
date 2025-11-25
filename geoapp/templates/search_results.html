@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Weather Results</title>
+</head>
+<body>
+    <h1>Weather Results{% if continent %} – {{ continent }}{% endif %}</h1>
+
+    {% if error_message %}
+        <p style="color:red;">{{ error_message }}</p>
+    {% endif %}
+
+    {% if weather_data %}
+        <table border="1" cellpadding="5">
+            <thead>
+                <tr>
+                    <th>Country</th>
+                    <th>Capital</th>
+                    <th>Population</th>
+                    <th>Latitude</th>
+                    <th>Longitude</th>
+                    <th>Temperature (°C)</th>
+                    <th>Description</th>
+                    <th>Icon</th>
+                    <th>Error</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in weather_data %}
+                    <tr>
+                        <td>{{ item.country }}</td>
+                        <td>{{ item.capital }}</td>
+                        <td>{{ item.population }}</td>
+                        <td>{{ item.latitude }}</td>
+                        <td>{{ item.longitude }}</td>
+                        <td>
+                            {% if item.temperature is not None %}
+                                {{ item.temperature }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>{{ item.description|default:"-" }}</td>
+                        <td>
+                            {% if item.icon %}
+                                <img src="https://openweathermap.org/img/wn/{{ item.icon }}@2x.png" alt="icon">
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if item.error %}
+                                {{ item.error }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No data to display.</p>
+    {% endif %}
+
+    <p><a href="{% url 'home' %}">New search</a></p>
+    <p><a href="{% url 'history' %}">View history</a></p>
+</body>
+</html>
